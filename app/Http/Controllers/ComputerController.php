@@ -14,8 +14,8 @@ class ComputerController extends Controller
     public function index(): View
     {
         $viewData = [];
-        $viewData["title"] = "Computers - Online Store";
-        $viewData["subtitle"] =  "List of Computers";
+        $viewData["title"] = "Computadores - tienda en linea";
+        $viewData["subtitle"] =  "Lista de computadores";
         $viewData["computers"] = Computer::all() ;
         return view('computer.index')->with("viewData", $viewData);
     }
@@ -23,8 +23,8 @@ class ComputerController extends Controller
     {
         $viewData = [];
         $computer = Computer::findOrFail($id);
-        $viewData["title"] = $computer["name"]." - Online Store";
-        $viewData["subtitle"] = $computer["name"]." - Computer information";
+        $viewData["title"] = $computer["name"]." - Tienda en linea";
+        $viewData["subtitle"] = $computer["name"]." - Informacion de la computadora";
         $viewData["computer"] = $computer;
         return view('computer.show')->with("viewData", $viewData);
     }
@@ -32,7 +32,7 @@ class ComputerController extends Controller
     public function create(): View
     {
         $viewData = []; // para enviar a la vista
-        $viewData["title"] = "Create computer";
+        $viewData["title"] = "Crear Computadora";
     
         return view('computer.create')->with("viewData", $viewData);
     }

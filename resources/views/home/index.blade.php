@@ -2,6 +2,6 @@
 @section('title', 'Pagina de inicio - Tienda en linea')
 @section('content')
 <div class="text-center">
-  Welcome to our Store!!
+  Bienvenidos a nuestra tienda!!
 </div>
 @endsection
