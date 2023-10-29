@@ -34,6 +34,8 @@ class Computer extends Model
         $this->attributes['id'] = $id;
     }
 
+
+
     public function getName(): string
     {
         return $this->attributes['name'];
@@ -45,7 +47,7 @@ class Computer extends Model
     }
 
 
-    public function getDescription(): float
+    public function getDescription(): string
     {
         return $this->attributes['description'];
     }
@@ -55,6 +57,8 @@ class Computer extends Model
         $this->attributes['description'] = $description;
     }
     
+
+
     public function getPrice(): int
     {
         return $this->attributes['price'];
@@ -64,6 +68,7 @@ class Computer extends Model
     {
         $this->attributes['price'] = $price;
     }
+
 
     public function getQuantity(): int
     {
@@ -77,7 +82,7 @@ class Computer extends Model
     }
 
     
-    public function getRamCard(): float
+    public function getRamCard(): string
     {
         return $this->attributes['ramCard'];
     }
@@ -87,7 +92,8 @@ class Computer extends Model
         $this->attributes['ramCard'] = $ramCard;
     }
 
-    public function getGraphicAccelerator(): float
+
+    public function getGraphicAccelerator(): string
     {
         return $this->attributes['graphicAccelerator'];
     }
@@ -97,7 +103,8 @@ class Computer extends Model
         $this->attributes['graphicAccelerator'] = $graphicAccelerator;
     }
 
-    public function getHdd(): float
+
+    public function getHdd(): string
     {
         return $this->attributes['hdd'];
     }

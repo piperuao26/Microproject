@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('computers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->float('description');
+            $table->string('description');
             $table->integer('price');
             $table->integer('quantity');
-            $table->float('ramCard');
-            $table->float('graphicAccelerator');
-            $table->float('hdd');
+            $table->string('ramCard');
+            $table->string('graphicAccelerator');
+            $table->string('hdd');
             $table->timestamps();
         });
     }

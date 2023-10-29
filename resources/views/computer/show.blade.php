@@ -12,7 +12,8 @@
         <h5 class="card-title">
            {{ $viewData["computer"]["name"] }}
         </h5>
-        <p class="card-text">{{ $viewData["computer"]["description"] }}</p>
+        <p class="card-text">{{ $viewData["computer"]["price"] }}</p>
+        <p class="card-text">{{ $viewData["computer"]["quantity"] }}</p>
       </div>
     </div>
   </div>

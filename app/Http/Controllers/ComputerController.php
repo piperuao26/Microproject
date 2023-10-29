@@ -4,28 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\Computer;
+
 
 class ComputerController extends Controller
 {
-    public static $computers = [
-        ["id"=>"1", "name"=>"TV", "description"=>"Best TV"],
-        ["id"=>"2", "name"=>"iPhone", "description"=>"Best iPhone"],
-        ["id"=>"3", "name"=>"Chromecast", "description"=>"Best Chromecast"],
-        ["id"=>"4", "name"=>"Glasses", "description"=>"Best Glasses"]
-    ];
+
 
     public function index(): View
     {
         $viewData = [];
         $viewData["title"] = "Computers - Online Store";
         $viewData["subtitle"] =  "List of Computers";
-        $viewData["computers"] = ComputerController::$computers;
+        $viewData["computers"] = Computer::all() ;
         return view('computer.index')->with("viewData", $viewData);
     }
     public function show(string $id): View
     {
         $viewData = [];
-        $computer = ComputerController::$computers[$id-1];
+        $computer = Computer::findOrFail($id);
         $viewData["title"] = $computer["name"]." - Online Store";
         $viewData["subtitle"] = $computer["name"]." - Computer information";
         $viewData["computer"] = $computer;
@@ -42,13 +39,22 @@ class ComputerController extends Controller
     
     
 
-    public function save(Request $request)
+    public function save(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             "name" => "required",
-            "price" => "required"
+            "description" => "required",
+            "price" => "required",
+            "quantity" => "required",
+            "ramCard" => "required",
+            "graphicAccelerator" => "required",
+            "hdd" => "required"
         ]);
-        dd($request->all());
-        //here will be the code to call the model and save it to the database
+        Computer::create($request->only(["name","description" , "price", "quantity", "ramCard", "graphicAccelerator", "hdd"]));
+       
+        return redirect()->route('computer.create')->with('success', 'Computadora creada exitosamente');
+
+        return back();
+
     }
 }
