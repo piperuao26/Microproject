@@ -21,13 +21,17 @@ Route::get('/computers', 'App\Http\Controllers\ComputerController@index')->name(
 Route::get('/computers/create', 'App\Http\Controllers\ComputerController@create')->name("computer.create");
 Route::post('/computers/save', 'App\Http\Controllers\ComputerController@save')->name("computer.save");
 Route::get('/computers/{id}', 'App\Http\Controllers\ComputerController@show')->name("computer.show");
+Route::get('/admin', 'App\Http\Controllers\Admin\AdminHomeController@index')->name("admin.home.index");
+Route::get('/admin/computers', 'App\Http\Controllers\Admin\AdminComputerController@index')->name("admin.computer.index");
+Route::post('/admin/computers/store', 'App\Http\Controllers\Admin\AdminComputerController@store')->name("admin.computer.store");
 Route::get('/cart', 'App\Http\Controllers\CartController@index')->name("cart.index");
 Route::get('/cart/delete', 'App\Http\Controllers\CartController@delete')->name("cart.delete");
 Route::post('/cart/add/{id}', 'App\Http\Controllers\CartController@add')->name("cart.add"); 
-    
+
 Route::middleware('auth')->group(function () {
     Route::get('/cart/purchase', 'App\Http\Controllers\CartController@purchase')->name("cart.purchase");
    }); 
+   Route::get('/my-account/orders', 'App\Http\Controllers\MyAccountController@orders')->name("myaccount.orders"); 
 
 
 Auth::routes();

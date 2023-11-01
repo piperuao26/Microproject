@@ -58,14 +58,6 @@ class ComputerController extends Controller
 
     }
 
-    public static function sumPricesByQuantities($computers, $computersInSession)
-{
-    $total = 0;
-    foreach ($computers as $computer) {
-        $total = $total + ($computer->getPrice() * $computersInSession[$computer->getId()]);
-    }
 
-    return $total;
-}
 
 }

@@ -115,7 +115,7 @@ class Computer extends Model
     {
         $this->attributes['hdd'] = $hdd;
     }
-    
+
     public function items()
     {
     return $this->hasMany(Item::class);
@@ -129,5 +129,15 @@ class Computer extends Model
     public function setItems($items)
     {
     $this->items = $items;
+    }
+
+    public static function sumPricesByQuantities($computers, $computersInSession)
+    {
+        $total = 0;
+        foreach ($computers as $computer) {
+            $total = $total + ($computer->getPrice() * $computersInSession[$computer->getId()]);
+        }
+    
+        return $total;
     }
 }
