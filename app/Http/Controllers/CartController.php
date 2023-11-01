@@ -4,58 +4,93 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Models\Computer;
+use App\Models\Order;
+use App\Models\Item; 
+
 
 class CartController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
-        $computers = Computer::all(); // Obtén todas las computadoras de la base de datos
-    
-        $cartComputers = [];
-        $cartComputerData = $request->session()->get('cart_computer_data');
-    
-        if ($cartComputerData) {
-            // Lógica para obtener computadoras del carrito
-            foreach ($computers as $computer) {
-                $computerID = $computer->id;
-                if (in_array($computerID, $cartComputerData)) {
-                    $cartComputers[$computerID] = $computer;
-                }
-            }
+        $total = 0;
+        $computersInCart = [];
+        $computersInSession = $request->session()->get("computers");
+
+        if ($computersInSession) {
+            $computersInCart = Computer::findMany(array_keys($computersInSession));
+            $total = Computer::sumPricesByQuantities($computersInCart, $computersInSession);
         }
-    
+
         $viewData = [];
-        $viewData['title'] = 'Carrito - Tienda en línea';
-        $viewData['subtitle'] = 'Carrito de compras';
-        $viewData['computers'] = $computers; // Pasa las computadoras desde la base de datos
-        $viewData['cartComputers'] = $cartComputers;
+        $viewData["title"] = "Cart - Online Store";
+        $viewData["subtitle"] = "Shopping Cart";
+        $viewData["total"] = $total;
+        $viewData["computers"] = $computersInCart;
 
-        return view('cart.index')->with('viewData', $viewData);
+        return view('cart.index')->with("viewData", $viewData);
     }
 
-    public function add(Request $request)
+    public function add(Request $request, $id)
     {
-        $computerID = $request->input('id');
-        $cartComputerData = $request->session()->get('cart_computer_data', []);
-    
-        // Verifica si $computerID es un valor válido y existe en tu lista de computadoras.
-        $computer = Computer::find($computerID);
-    
-        if ($computer) {
-            $cartComputerData[] = $computerID;
-            $request->session()->put('cart_computer_data', $cartComputerData);
-            return redirect()->route('cart.index')->with('success', 'La computadora se ha añadido al carrito correctamente.');
-        } else {
-            return redirect()->route('cart.index')->with('error', 'La computadora no existe o no es válida.');
+        $computers = $request->session()->get("computers");
+        $computers[$id] = $request->input('quantity');
+        $request->session()->put('computers', $computers);
+
+        return redirect()->route('cart.index');
+    }
+
+    public function delete(Request $request)
+    {
+        $request->session()->forget('computers');
+        return back();
+    }
+    public function purchase(Request $request)
+{
+    $computersInSession = $request->session()->get("computers");
+
+    if ($computersInSession) {
+        $userId = Auth::user()->getId();
+        $order = new Order();
+        $order->setUserId($userId);
+        $order->setTotal(0);
+        $order->save();
+
+        $total = 0;
+        $computersInCart = Computer::findMany(array_keys($computersInSession));
+
+        foreach ($computersInCart as $computer) {
+            $quantity = $computersInSession[$computer->getId()];
+            $item = new Item();
+            $item->setQuantity($quantity);
+            $item->setPrice($computer->getPrice());
+            $item->setComputerId($computer->getId());
+            $item->setOrderId($order->getId());
+            $item->save();
+            $total = $total + ($computer->getPrice() * $quantity);
         }
+
+        $order->setTotal($total);
+        $order->save();
+
+        $newBalance = Auth::user()->getBalance() - $total;
+        Auth::user()->setBalance($newBalance);
+        Auth::user()->save();
+
+        $request->session()->forget('computers');
+
+        $viewData = [];
+        $viewData["title"] = "Purchase - Online Store";
+        $viewData["subtitle"] = "Purchase Status";
+        $viewData["order"] = $order;
+
+        return view('cart.purchase')->with("viewData", $viewData);
+    } else {
+        return redirect()->route('cart.index');
+    }
     }
 
-    public function removeAll(Request $request): RedirectResponse
-    {
-        $request->session()->forget('cart_computer_data');
-    
-        return redirect()->route('cart.index')->with('success', 'Se han eliminado todas las computadoras del carrito.');
-    }
 }
+

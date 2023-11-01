@@ -22,9 +22,9 @@ Route::get('/computers/create', 'App\Http\Controllers\ComputerController@create'
 Route::post('/computers/save', 'App\Http\Controllers\ComputerController@save')->name("computer.save");
 Route::get('/computers/{id}', 'App\Http\Controllers\ComputerController@show')->name("computer.show");
 Route::get('/cart', 'App\Http\Controllers\CartController@index')->name("cart.index");
-Route::post('/cart/add/{id}', 'App\Http\Controllers\CartController@add')->name('cart.add');
-Route::get('/cart/removeAll/', 'App\Http\Controllers\CartController@removeAll')->name("cart.removeAll");
-
+Route::get('/cart/delete', 'App\Http\Controllers\CartController@delete')->name("cart.delete");
+Route::post('/cart/add/{id}', 'App\Http\Controllers\CartController@add')->name("cart.add"); 
+    
 Route::middleware('auth')->group(function () {
     Route::get('/cart/purchase', 'App\Http\Controllers\CartController@purchase')->name("cart.purchase");
    }); 

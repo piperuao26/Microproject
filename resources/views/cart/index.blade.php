@@ -1,44 +1,45 @@
 @extends('layouts.app')
-
-@section("title", $viewData["title"])
-@section("subtitle", $viewData["subtitle"])
-
+@section('title', $viewData["title"])
+@section('subtitle', $viewData["subtitle"])
 @section('content')
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <h1>Productos disponibles</h1>
-      <ul>
-        @foreach($viewData["computers"] as $computer)
-          <li>
-            Id: {{ $computer->id }} - 
-            Name: {{ $computer->name }} -
-            Price: {{ $computer->price }} -
-            <form method="POST" action="{{ route('cart.add', ['id' => $computer->id]) }}">
-              @csrf
-              <input type="hidden" name="id" value="{{ $computer->id }}">
-              <button type="submit" class="btn btn-primary">Añadir al carrito</button>
-            </form>
-          </li>
-        @endforeach
-      </ul>
+<div class="card">
+    <div class="card-header">
+        Computers in Cart
     </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <h1>Productos en el carrito</h1>
-      <ul>
-        @foreach($viewData["cartComputers"] as $cartComputer)
-          <li>
-            Id: {{ $cartComputer->id }} - 
-            Name: {{ $cartComputer->name }} -
-            Price: {{ $cartComputer->price }}
-          </li>
-        @endforeach
-      </ul>
-      <a href="{{ route('cart.removeAll') }}" class="btn btn-danger">Eliminar todos los productos del carrito</a>
+    <div class="card-body">
+        <table class="table table-bordered table-striped text-center">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($viewData["computers"] as $computer)
+                    <tr>
+                        <td>{{ $computer->getId() }}</td>
+                        <td>{{ $computer->getName() }}</td>
+                        <td>${{ $computer->getPrice() }}</td>
+                        <td>{{ session('cart_products')[$computer->getId()] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="text-end">
+                <a class="btn btn-outline-secondary mb-2"><b>Total to pay:</b> ${{ $viewData["total"] }}</a>
+                @if (count($viewData["computers"]) > 0)
+                <a  href="{{ route('cart.purchase') }}" class="btn bg-primary text-white mb-2">Purchase</a>
+                <a href="{{ route('cart.delete') }}">
+                    <button class="btn btn-danger mb-2">
+                        Remove all products from Cart
+                    </button>
+                </a>
+                @endif 
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 @endsection

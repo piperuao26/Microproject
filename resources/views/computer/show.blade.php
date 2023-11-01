@@ -15,6 +15,22 @@
         <p class="card-text">{{ $viewData["computer"]["description"] }}</p>
         <p class="card-text">{{ $viewData["computer"]["price"] }}</p>
         <p class="card-text">{{ $viewData["computer"]["quantity"] }}</p>
+        <p class="card-text">
+  <form method="POST" action="{{ route('cart.add', ['id' => $viewData['computer']->getId()]) }}">
+    <div class="row">
+      @csrf
+      <div class="col-auto">
+        <div class="input-group col-auto">
+          <div class="input-group-text">Cantidad</div>
+          <input type="number" min="1" max="10" class="form-control quantity-input" name="quantity" value="1">
+        </div>
+      </div>
+      <div class="col-auto">
+        <button class="btn bg-primary text-white" type="submit">Agregad al carrito</button>
+      </div>
+    </div>
+  </form>
+</p>
       </div>
     </div>
   </div>
