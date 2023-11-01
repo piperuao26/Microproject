@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Order;
 
 class User extends Authenticatable
 {
@@ -14,15 +15,14 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
+     * $this->orders - Order[] - contains the associated orders
      * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'address',
-        'phoneNumber',
+
     ];
 
     /**
@@ -44,4 +44,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function orders()
+     {
+            return $this->hasMany(Order::class);
+    }
+
+    public function getOrders()
+    {
+        return $this->orders;
+    }
+
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    } 
 }

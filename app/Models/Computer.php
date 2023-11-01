@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Item; 
 
 class Computer extends Model
 {
@@ -20,6 +21,7 @@ class Computer extends Model
      * $this->attributes['graphicAccelerator'] - float - contains the ram card of every computer
      * $this->attributes['hdd'] - float - contains the hard drive disc of every computer
      * Add any additional attributes specific to the Computer model here
+     * $this->items - Item[] - contains the associated items 
      */
 
     protected $fillable = ['name', 'description' , 'price', 'quantity', 'ramCard', 'graphicAccelerator', 'hdd'];
@@ -113,5 +115,19 @@ class Computer extends Model
     {
         $this->attributes['hdd'] = $hdd;
     }
-
+    
+    public function items()
+    {
+    return $this->hasMany(Item::class);
+    }
+   
+    public function getItems()
+    {
+    return $this->items;
+    }
+   
+    public function setItems($items)
+    {
+    $this->items = $items;
+    }
 }
